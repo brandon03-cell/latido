@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Red Latido</title>
+  <meta name="description" content="Latido conecta hospitales y centros de transfusión que necesitan sangre, plaquetas o plasma con personas que quieren donar. Reserva tu cita o publica una solicitud de donantes.">
+  <meta name="theme-color" content="#1B0307">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 40'%3E%3Cpath d='M16 2C16 2 4 16.5 4 25.5a12 12 0 0 0 24 0C28 16.5 16 2 16 2z' fill='%23D6243E'/%3E%3Cpath d='M6 26h5l2-4 3 8 2.5-6 1.5 2H26' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('js');
+      try {
+        var t = localStorage.getItem('latido.theme');
+        if (t === 'dark' || t === 'light') root.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+  <script src="js/hero.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+
+<!-- Iconos -->
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.2c3.2 4 6 7.5 6 10.8a6 6 0 0 1-12 0c0-3.3 2.8-6.8 6-10.8z"/></symbol>
+  <symbol id="i-plasma" viewBox="0 0 24 24"><path d="M12 3.2c3.2 4 6 7.5 6 10.8a6 6 0 0 1-12 0c0-3.3 2.8-6.8 6-10.8z"/><path d="M6.4 13.4c1.9.9 3.7.9 5.6 0s3.7-.9 5.6 0"/></symbol>
+  <symbol id="i-platelets" viewBox="0 0 24 24"><ellipse cx="8" cy="8.5" rx="3.2" ry="2.3" transform="rotate(-20 8 8.5)"/><ellipse cx="16.8" cy="7.5" rx="2.4" ry="1.8"/><ellipse cx="14.5" cy="15.8" rx="3.4" ry="2.5" transform="rotate(15 14.5 15.8)"/><circle cx="6.5" cy="16.5" r="1.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"/><path d="M15.5 8.5V5.5A1.5 1.5 0 0 0 14 4H5.5A1.5 1.5 0 0 0 4 5.5V14a1.5 1.5 0 0 0 1.5 1.5h3"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4.5l8.5 15h-17z"/><path d="M12 10.5v4M12 17.3v.2"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><path d="M4 21V7l8-4 8 4v14"/><path d="M12 8.5v5M9.5 11h5M9.5 21v-4h5v4"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M19.5 14.5A7.8 7.8 0 1 1 9.5 4.5a6.2 6.2 0 0 0 10 10z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-cells" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="9" cy="10" r="1.6"/><circle cx="14.6" cy="9" r="1.2"/><circle cx="13.2" cy="14.6" r="1.9"/></symbol>
+  <symbol id="i-cord" viewBox="0 0 24 24"><path d="M8 3.5c5 2.2 5 6.3 0 8.5s-5 6.3 0 8.5"/><path d="M16 3.5c-5 2.2-5 6.3 0 8.5s5 6.3 0 8.5"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.2"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4.5h-4.5"/></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<header class="site-header is-over-hero" id="siteHeader">
+  <div class="header-inner container">
+    <a class="brand" href="#top" aria-label="Latido, volver al inicio">
+      <svg class="brand-mark" viewBox="0 0 32 40" aria-hidden="true" focusable="false">
+        <path class="bm-drop" d="M16 2C16 2 4 16.5 4 25.5a12 12 0 0 0 24 0C28 16.5 16 2 16 2z"/>
+        <path class="bm-ecg" d="M6 26h5l2-4 3 8 2.5-6 1.5 2H26"/>
+      </svg>
+      <span class="brand-name">Latido</span>
+    </a>
+
+    <nav class="main-nav" id="mainNav" aria-label="Principal">
+      <a href="#solicitudes" data-nav="solicitudes">Solicitudes</a>
+      <a href="#que-donar" data-nav="que-donar">Qué donar</a>
+      <a href="#compatibilidad" data-nav="compatibilidad">Compatibilidad</a>
+      <a href="#como-donar" data-nav="como-donar">Cómo donar</a>
+      <a href="#centros" data-nav="centros">Para centros</a>
+      <a href="#mis-citas" data-nav="mis-citas">Mis citas <span class="nav-count" id="navCount" hidden>0</span></a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Activar tema oscuro">
+        <svg class="ico ico-moon" aria-hidden="true" focusable="false"><use href="#i-moon"></use></svg>
+        <svg class="ico ico-sun" aria-hidden="true" focusable="false"><use href="#i-sun"></use></svg>
+      </button>
+      <a class="btn btn--primary btn--sm header-cta" href="#solicitudes">Donar ahora</a>
+      <button class="icon-btn menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mainNav" aria-label="Abrir menú">
+        <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-menu"></use></svg>
+      </button>
+    </div>
+  </div>
+  <div class="scroll-progress" aria-hidden="true"><span id="scrollProgress"></span></div>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
+    <div class="hero-shade" aria-hidden="true"></div>
+    <svg class="hero-ecg" viewBox="0 0 1200 160" aria-hidden="true" focusable="false">
+      <path class="ecg-base" d="M0 100 L120 100 Q135 86 150 100 L172 100 L182 110 L197 18 L211 134 L223 100 L258 100 Q290 66 322 100 L400 100 L520 100 Q535 86 550 100 L572 100 L582 110 L597 18 L611 134 L623 100 L658 100 Q690 66 722 100 L800 100 L920 100 Q935 86 950 100 L972 100 L982 110 L997 18 L1011 134 L1023 100 L1058 100 Q1090 66 1122 100 L1200 100"/>
+      <path class="ecg-pulse" pathLength="1000" d="M0 100 L120 100 Q135 86 150 100 L172 100 L182 110 L197 18 L211 134 L223 100 L258 100 Q290 66 322 100 L400 100 L520 100 Q535 86 550 100 L572 100 L582 110 L597 18 L611 134 L623 100 L658 100 Q690 66 722 100 L800 100 L920 100 Q935 86 950 100 L972 100 L982 110 L997 18 L1011 134 L1023 100 L1058 100 Q1090 66 1122 100 L1200 100"/>
+    </svg>
+
+    <div class="hero-inner container">
+      <div class="hero-copy">
+        <p class="hero-eyebrow"><span class="live-dot" aria-hidden="true"></span><span id="heroLive">Solicitudes activas ahora mismo</span></p>
+        <h1 class="hero-title" id="hero-title">
+          <span class="sr-only">Tu sangre, su latido.</span>
+          <span class="split" data-split aria-hidden="true">Tu sangre,</span>
+          <span class="split split--accent" data-split aria-hidden="true">su latido.</span>
+        </h1>
+        <p class="hero-lead">Latido conecta a hospitales y centros de transfusión que necesitan sangre, plaquetas o plasma con personas dispuestas a donar cerca de ellos. Encuentra una solicitud y reserva tu cita en dos minutos.</p>
+        <div class="hero-ctas">
+          <a class="btn btn--primary btn--lg" href="#solicitudes">
+            Quiero donar
+            <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-arrow"></use></svg>
+          </a>
+          <a class="btn btn--ghost-light btn--lg" href="#centros">
+            <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-building"></use></svg>
+            Soy un centro sanitario
+          </a>
+        </div>
+      </div>
+
+      <aside class="spotlight" id="spotlight" aria-label="Solicitud más urgente"></aside>
+
+      <dl class="hero-stats">
+        <div class="hero-stat"><dt>Solicitudes activas</dt><dd data-stat="active">0</dd></div>
+        <div class="hero-stat"><dt>Donantes que faltan</dt><dd data-stat="missing">0</dd></div>
+        <div class="hero-stat"><dt>Urgentes o críticas</dt><dd data-stat="urgent">0</dd></div>
+        <div class="hero-stat"><dt>Mililitros por donación</dt><dd data-count="450">450</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ TICKER ============ -->
+  <section class="ticker" aria-label="Necesidades urgentes">
+    <p class="ticker-label"><span class="live-dot" aria-hidden="true"></span>Urgente</p>
+    <div class="ticker-viewport">
+      <div class="ticker-track" id="tickerTrack"></div>
+    </div>
+  </section>
+
+  <!-- ============ TABLÓN ============ -->
+  <section class="section" id="solicitudes" aria-labelledby="solicitudes-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Tablón de solicitudes</p>
+        <h2 id="solicitudes-title">Quién necesita tu sangre hoy</h2>
+        <p class="section-lead">Hospitales y centros de transfusión publican aquí lo que les falta. Filtra por tu grupo sanguíneo y reserva hora en el centro que prefieras.</p>
+      </div>
+
+      <div class="filters reveal" role="search" aria-label="Filtrar solicitudes">
+        <div class="filters-row">
+          <fieldset class="seg">
+            <legend class="sr-only">Tipo de donación</legend>
+            <label class="seg-opt"><input type="radio" name="ftype" value="all" checked><span>Todas</span></label>
+            <label class="seg-opt"><input type="radio" name="ftype" value="sangre"><span>Sangre</span></label>
+            <label class="seg-opt"><input type="radio" name="ftype" value="plaquetas"><span>Plaquetas</span></label>
+            <label class="seg-opt"><input type="radio" name="ftype" value="plasma"><span>Plasma</span></label>
+          </fieldset>
+
+          <div class="search-box">
+            <label class="sr-only" for="fSearch">Buscar por ciudad o centro</label>
+            <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-search"></use></svg>
+            <input type="search" id="fSearch" placeholder="Ciudad o centro" autocomplete="off">
+          </div>
+
+          <label class="switch">
+            <input type="checkbox" id="fUrgent">
+            <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+            <span>Solo urgentes</span>
+          </label>
+        </div>
+
+        <fieldset class="group-filter">
+          <legend>Mi grupo sanguíneo</legend>
+          <div class="group-chips" id="groupChips">
+            <label class="gchip"><input type="radio" name="fgroup" value="all" checked><span>Todos</span></label>
+            <label class="gchip"><input type="radio" name="fgroup" value="O-"><span>O−</span></label>
+            <label class="gchip"><input type="radio" name="fgroup" value="O+"><span>O+</span></label>
+            <label class="gchip"><input type="radio" name="fgroup" value="A-"><span>A−</span></label>
+            <label class="gchip"><input type="radio" name="fgroup" value="A+"><span>A+</span></label>
+            <label class="gchip"><input type="radio" name="fgroup" value="B-"><span>B−</span></label>
+            <label class="gchip"><input type="radio" name="fgroup" value="B+"><span>B+</span></label>
+            <label class="gchip"><input type="radio" name="fgroup" value="AB-"><span>AB−</span></label>
+            <label class="gchip"><input type="radio" name="fgroup" value="AB+"><span>AB+</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="board-meta">
+        <p id="boardCount" aria-live="polite"></p>
+        <p class="sample-note"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-info"></use></svg>Los centros de ejemplo son ficticios</p>
+      </div>
+
+      <div class="board-grid" id="boardGrid"></div>
+
+      <div class="board-empty" id="boardEmpty" hidden>
+        <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-search"></use></svg>
+        <h3>No hay solicitudes con estos filtros</h3>
+        <p>Prueba con otro tipo de donación o quita el filtro de grupo. Donar a las reservas generales también salva vidas.</p>
+        <button class="btn btn--secondary" type="button" id="clearFilters">Quitar filtros</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUÉ DONAR ============ -->
+  <section class="section section--alt" id="que-donar" aria-labelledby="donar-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Qué puedes donar</p>
+        <h2 id="donar-title">Tres formas de donar hoy, dos para el futuro</h2>
+        <p class="section-lead">La donación de sangre total es la más habitual, pero los hospitales también necesitan plaquetas y plasma. Y hay donaciones que se preparan con tiempo, como la de médula ósea.</p>
+      </div>
+
+      <div class="types-grid">
+        <article class="type-card reveal" style="--d:0s">
+          <div class="type-art type-art--sangre" aria-hidden="true">
+            <svg viewBox="0 0 100 120" focusable="false">
+              <defs><clipPath id="clipDropSangre"><path d="M50 6C50 6 14 50 14 76a36 36 0 0 0 72 0C86 50 50 6 50 6z"/></clipPath></defs>
+              <path class="art-drop-bg" d="M50 6C50 6 14 50 14 76a36 36 0 0 0 72 0C86 50 50 6 50 6z"/>
+              <g clip-path="url(#clipDropSangre)">
+                <g class="art-level"><path class="art-wave" d="M-50 50 Q-37.5 44 -25 50 T0 50 T25 50 T50 50 T75 50 T100 50 T125 50 T150 50 V130 H-50 Z"/></g>
+              </g>
+              <path class="art-drop-line" d="M50 6C50 6 14 50 14 76a36 36 0 0 0 72 0C86 50 50 6 50 6z"/>
+            </svg>
+          </div>
+          <div class="type-body">
+            <h3>Sangre total</h3>
+            <p>La donación más habitual. En el laboratorio se separa en glóbulos rojos, plasma y plaquetas, así que una sola bolsa puede ayudar a hasta tres pacientes.</p>
+            <dl class="facts">
+              <div><dt>Extracción</dt><dd>5–10 min · unos 45 min en total</dd></div>
+              <div><dt>Volumen</dt><dd>450 ml</dd></div>
+              <div><dt>Frecuencia</dt><dd>Cada 2 meses como mínimo. Hombres, hasta 4 veces al año; mujeres, hasta 3</dd></div>
+            </dl>
+          </div>
+          <button class="btn btn--secondary type-cta" type="button" data-filter-type="sangre">Ver solicitudes de sangre <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-arrow"></use></svg></button>
+        </article>
+
+        <article class="type-card reveal" style="--d:.08s">
+          <div class="type-art type-art--plaquetas" aria-hidden="true">
+            <svg viewBox="0 0 100 120" focusable="false">
+              <g class="plt" style="--dl:0"><ellipse cx="30" cy="36" rx="11" ry="7"/><circle class="plt-g" cx="27" cy="35" r="1.6"/><circle class="plt-g" cx="33" cy="38" r="1.2"/></g>
+              <g class="plt" style="--dl:1.4"><ellipse cx="68" cy="30" rx="8" ry="5.5"/><circle class="plt-g" cx="67" cy="29" r="1.3"/></g>
+              <g class="plt" style="--dl:2.6"><ellipse cx="54" cy="62" rx="13" ry="8.5"/><circle class="plt-g" cx="50" cy="60" r="1.8"/><circle class="plt-g" cx="57" cy="64" r="1.4"/><circle class="plt-g" cx="55" cy="58" r="1"/></g>
+              <g class="plt" style="--dl:3.8"><ellipse cx="24" cy="84" rx="9" ry="6"/><circle class="plt-g" cx="23" cy="84" r="1.4"/></g>
+              <g class="plt" style="--dl:.7"><ellipse cx="78" cy="88" rx="10" ry="6.5"/><circle class="plt-g" cx="76" cy="87" r="1.5"/><circle class="plt-g" cx="81" cy="90" r="1"/></g>
+              <g class="plt" style="--dl:2"><ellipse cx="46" cy="102" rx="6.5" ry="4.5"/></g>
+            </svg>
+          </div>
+          <div class="type-body">
+            <h3>Plaquetas</h3>
+            <p>Se obtienen por aféresis: una máquina separa las plaquetas y te devuelve el resto de la sangre por el mismo brazo. Son vitales para pacientes con cáncer, leucemia o trasplantes.</p>
+            <dl class="facts">
+              <div><dt>Extracción</dt><dd>60–90 min</dd></div>
+              <div><dt>Caducan en</dt><dd>5–7 días: por eso siempre hacen falta</dd></div>
+              <div><dt>Frecuencia</dt><dd>Más a menudo que la sangre total; el intervalo lo indica tu centro</dd></div>
+            </dl>
+          </div>
+          <button class="btn btn--secondary type-cta" type="button" data-filter-type="plaquetas">Ver solicitudes de plaquetas <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-arrow"></use></svg></button>
+        </article>
+
+        <article class="type-card reveal" style="--d:.16s">
+          <div class="type-art type-art--plasma" aria-hidden="true">
+            <svg viewBox="0 0 100 120" focusable="false">
+              <defs><clipPath id="clipDropPlasma"><path d="M50 6C50 6 14 50 14 76a36 36 0 0 0 72 0C86 50 50 6 50 6z"/></clipPath></defs>
+              <path class="art-drop-bg" d="M50 6C50 6 14 50 14 76a36 36 0 0 0 72 0C86 50 50 6 50 6z"/>
+              <g clip-path="url(#clipDropPlasma)">
+                <g class="art-level"><path class="art-wave" d="M-50 50 Q-37.5 44 -25 50 T0 50 T25 50 T50 50 T75 50 T100 50 T125 50 T150 50 V130 H-50 Z"/></g>
+              </g>
+              <path class="art-drop-line" d="M50 6C50 6 14 50 14 76a36 36 0 0 0 72 0C86 50 50 6 50 6z"/>
+            </svg>
+          </div>
+          <div class="type-body">
+            <h3>Plasma</h3>
+            <p>La parte líquida de la sangre, de color ámbar. Se transfunde en hemorragias y quemaduras graves y sirve para fabricar medicamentos como la albúmina o las inmunoglobulinas.</p>
+            <dl class="facts">
+              <div><dt>Extracción</dt><dd>Unos 45 min por aféresis</dd></div>
+              <div><dt>Se conserva</dt><dd>Congelado, hasta 3 años</dd></div>
+              <div><dt>Dato</dt><dd>El plasma del grupo AB sirve para pacientes de cualquier grupo</dd></div>
+            </dl>
+          </div>
+          <button class="btn btn--secondary type-cta" type="button" data-filter-type="plasma">Ver solicitudes de plasma <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-arrow"></use></svg></button>
+        </article>
+      </div>
+
+      <div class="types-secondary">
+        <article class="type-mini reveal">
+          <span class="type-mini-icon" aria-hidden="true"><svg class="ico" focusable="false"><use href="#i-cells"></use></svg></span>
+          <div>
+            <h3>Médula ósea</h3>
+            <p>Si tienes entre 18 y 40 años, puedes inscribirte como donante de progenitores hematopoyéticos con una muestra de sangre o saliva en tu centro de transfusión. Tus datos entran en el registro nacional (REDMO) por si algún paciente es compatible contigo. Hoy la mayoría de estas donaciones se obtienen de la sangre, por aféresis.</p>
+          </div>
+        </article>
+        <article class="type-mini reveal" style="--d:.08s">
+          <span class="type-mini-icon" aria-hidden="true"><svg class="ico" focusable="false"><use href="#i-cord"></use></svg></span>
+          <div>
+            <h3>Sangre de cordón umbilical</h3>
+            <p>Si vas a dar a luz, puedes donar la sangre del cordón en una maternidad acreditada. Se recoge después del parto y no supone ningún riesgo para ti ni para tu bebé. Pregunta por ello durante el embarazo.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CENTRIFUGADORA ============ -->
+  <section class="section" id="tres-vidas" aria-labelledby="vidas-title">
+    <div class="container vidas" id="vidas" data-state="mixed">
+      <div class="vidas-copy reveal">
+        <p class="eyebrow">Una donación, tres pacientes</p>
+        <h2 id="vidas-title">Lo que pasa con tu bolsa después de donar</h2>
+        <p class="section-lead">En el centro de transfusión, la sangre se centrifuga. Al girar a gran velocidad, sus componentes se separan por densidad y cada uno llega a un paciente distinto.</p>
+        <button class="btn btn--primary" id="spinBtn" type="button">Centrifugar la bolsa</button>
+      </div>
+
+      <ul class="legend reveal" id="legend">
+        <li class="legend-item" data-layer="plasma">
+          <span class="swatch swatch--plasma" aria-hidden="true"></span>
+          <div>
+            <h3>Plasma</h3>
+            <p class="legend-meta">≈ 55 % del volumen · congelado, hasta 3 años</p>
+            <p>Hemorragias graves, quemados, problemas de coagulación y fabricación de medicamentos.</p>
+          </div>
+        </li>
+        <li class="legend-item" data-layer="plaquetas">
+          <span class="swatch swatch--buffy" aria-hidden="true"></span>
+          <div>
+            <h3>Plaquetas</h3>
+            <p class="legend-meta">Menos del 1 % · entre 5 y 7 días</p>
+            <p>Pacientes con cáncer o leucemia, trasplantes y cirugías cardíacas.</p>
+          </div>
+        </li>
+        <li class="legend-item" data-layer="hematies">
+          <span class="swatch swatch--red" aria-hidden="true"></span>
+          <div>
+            <h3>Glóbulos rojos</h3>
+            <p class="legend-meta">≈ 45 % del volumen · refrigerados, hasta 42 días</p>
+            <p>Cirugías, accidentes, anemias graves y partos con complicaciones.</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="centrifuge reveal" id="centrifuge">
+        <div class="rotor" aria-hidden="true">
+          <span class="rotor-disc"></span>
+          <span class="rotor-hub"></span>
+        </div>
+        <div class="tube" id="tube" role="img" aria-label="Tubo con sangre total sin centrifugar">
+          <span class="tube-cap"></span>
+          <span class="tube-glass">
+            <span class="tube-fill">
+              <span class="layer layer--plasma"><span class="layer-tag">Plasma</span></span>
+              <span class="layer layer--buffy"></span>
+              <span class="layer layer--red"><span class="layer-tag">Hematíes</span></span>
+            </span>
+          </span>
+        </div>
+        <p class="centrifuge-status" id="centriStatus" aria-live="polite">Sangre total sin separar</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMPATIBILIDAD ============ -->
+  <section class="section section--alt" id="compatibilidad" aria-labelledby="compat-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Compatibilidad</p>
+        <h2 id="compat-title">¿A quién puede ayudar tu sangre?</h2>
+        <p class="section-lead">Toca un grupo de la fila de arriba para ver a quién puede donar, o de la fila de abajo para ver de quién puede recibir. Con el plasma, las reglas se invierten.</p>
+      </div>
+
+      <div class="compat reveal">
+        <div class="compat-toolbar">
+          <fieldset class="seg">
+            <legend class="sr-only">Componente</legend>
+            <label class="seg-opt"><input type="radio" name="compComponent" value="rbc" checked><span>Glóbulos rojos</span></label>
+            <label class="seg-opt"><input type="radio" name="compComponent" value="plasma"><span>Plasma</span></label>
+          </fieldset>
+        </div>
+
+        <div class="compat-stage" id="compatStage">
+          <svg class="compat-links" id="compatLinks" aria-hidden="true" focusable="false"></svg>
+          <p class="compat-row-label">Quien dona</p>
+          <div class="compat-row" id="compatDonors" role="group" aria-label="Grupos donantes"></div>
+          <div class="compat-gap" aria-hidden="true"></div>
+          <div class="compat-row" id="compatRecipients" role="group" aria-label="Grupos receptores"></div>
+          <p class="compat-row-label">Quien recibe</p>
+        </div>
+
+        <p class="compat-result" id="compatResult" aria-live="polite"></p>
+        <p class="fine-print">Guía orientativa del sistema ABO y Rh. En el hospital, cada transfusión de glóbulos rojos se confirma con pruebas de compatibilidad.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CÓMO DONAR ============ -->
+  <section class="section" id="como-donar" aria-labelledby="como-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">El día de la donación</p>
+        <h2 id="como-title">Cuatro pasos y unos 45 minutos</h2>
+        <p class="section-lead">Donar sangre total es sencillo. Así es la visita, desde que llegas hasta que te vas.</p>
+      </div>
+
+      <div class="process" id="process">
+        <ol class="steps" id="steps">
+          <li class="step">
+            <span class="step-num" aria-hidden="true">1</span>
+            <div class="step-body">
+              <h3>Recepción</h3>
+              <p class="step-time">5–10 min</p>
+              <p>Te identificas con tu DNI, NIE o pasaporte y rellenas un cuestionario de salud. Tus respuestas son confidenciales.</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">2</span>
+            <div class="step-body">
+              <h3>Entrevista y chequeo</h3>
+              <p class="step-time">5–10 min</p>
+              <p>Un profesional sanitario revisa el cuestionario contigo, te toma la tensión y mide tu hemoglobina con una gota de sangre del dedo.</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">3</span>
+            <div class="step-body">
+              <h3>Extracción</h3>
+              <p class="step-time">5–10 min</p>
+              <p>Te sientas en un sillón y se extraen unos 450 ml. Todo el material es estéril y de un solo uso: donar no tiene ningún riesgo de contagio.</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">4</span>
+            <div class="step-body">
+              <h3>Descanso y refrigerio</h3>
+              <p class="step-time">10–15 min</p>
+              <p>Tomas algo y descansas un rato antes de irte. Tu cuerpo repone el plasma en uno o dos días y los glóbulos rojos, en unas semanas.</p>
+            </div>
+          </li>
+        </ol>
+
+        <aside class="bag-panel" id="bagPanel" aria-label="Progreso de la donación">
+          <svg class="bag" viewBox="0 0 200 300" role="img" aria-labelledby="bagTitle" focusable="false">
+            <title id="bagTitle">Bolsa de donación que se llena hasta 450 ml</title>
+            <defs>
+              <clipPath id="bagClip"><path d="M44 62 H156 Q180 62 180 86 V246 Q180 284 142 284 H58 Q20 284 20 246 V86 Q20 62 44 62 Z"/></clipPath>
+              <linearGradient id="bagBlood" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#E0314A"/>
+                <stop offset="1" stop-color="#7A0616"/>
+              </linearGradient>
+            </defs>
+            <path class="bag-tube" d="M100 62 V34 C100 16 116 10 132 10 H198"/>
+            <rect class="bag-port" x="88" y="50" width="24" height="16" rx="4"/>
+            <g clip-path="url(#bagClip)">
+              <rect class="bag-empty" x="0" y="0" width="200" height="300"/>
+              <g id="bagLiquid" transform="translate(0 284)">
+                <path class="bag-wave" fill="url(#bagBlood)" d="M-100 10 Q-87.5 3 -75 10 T-50 10 T-25 10 T0 10 T25 10 T50 10 T75 10 T100 10 T125 10 T150 10 T175 10 T200 10 T225 10 T250 10 T275 10 T300 10 V420 H-100 Z"/>
+              </g>
+            </g>
+            <path class="bag-outline" d="M44 62 H156 Q180 62 180 86 V246 Q180 284 142 284 H58 Q20 284 20 246 V86 Q20 62 44 62 Z"/>
+            <g class="bag-label">
+              <rect x="46" y="150" width="108" height="92" rx="8"/>
+              <text x="58" y="172">SANGRE TOTAL</text>
+              <text class="bag-label-big" x="58" y="198">450 ml</text>
+              <path class="bag-barcode" d="M58 214v18M61 214v18M65 214v18M67 214v18M72 214v18M76 214v18M78 214v18M83 214v18M86 214v18M91 214v18M93 214v18M97 214v18M102 214v18M104 214v18M109 214v18M113 214v18M116 214v18M120 214v18M123 214v18M127 214v18M131 214v18M134 214v18M139 214v18M142 214v18"/>
+            </g>
+          </svg>
+          <div class="bag-readout">
+            <p class="bag-ml"><span id="bagMl">0</span><span class="bag-unit">ml</span></p>
+            <p class="bag-caption" id="bagCaption">Recepción</p>
+          </div>
+        </aside>
+      </div>
+
+      <div class="requirements" id="requisitos">
+        <div class="req-list reveal">
+          <p class="eyebrow">Requisitos básicos</p>
+          <h3 class="req-list-title">¿Quién puede donar sangre?</h3>
+          <dl class="req-table">
+            <div><dt>Edad</dt><dd>Entre 18 y 65 años</dd></div>
+            <div><dt>Peso</dt><dd>50 kg o más</dd></div>
+            <div><dt>Salud</dt><dd>Encontrarte bien el día de la donación</dd></div>
+            <div><dt>Documento</dt><dd>DNI, NIE o pasaporte</dd></div>
+            <div><dt>Antes</dt><dd>No vengas en ayunas: come algo ligero y bebe agua</dd></div>
+            <div><dt>Intervalo</dt><dd>Al menos 2 meses entre donaciones de sangre total</dd></div>
+          </dl>
+          <p class="fine-print">Criterios generales en España. Cada centro de transfusión puede aplicar criterios adicionales y el personal sanitario confirma tu aptitud el mismo día.</p>
+        </div>
+
+        <div class="quiz reveal" id="quiz" style="--d:.1s">
+          <div class="quiz-head">
+            <p class="eyebrow">Test rápido</p>
+            <h3>¿Puedo donar hoy?</h3>
+            <div class="quiz-progress" aria-hidden="true"><span id="quizBar"></span></div>
+          </div>
+          <div class="quiz-stage" id="quizStage" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CENTROS ============ -->
+  <section class="section band-dark" id="centros" aria-labelledby="centros-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Para hospitales y centros de transfusión</p>
+        <h2 id="centros-title">Publica una solicitud de donantes</h2>
+        <p class="section-lead">Indica qué necesitáis y para cuándo. La solicitud aparece al momento en el tablón y los donantes pueden reservar cita directamente.</p>
+      </div>
+
+      <div class="center-layout">
+        <form class="request-form" id="requestForm" novalidate>
+          <div class="form-banner" id="rqBanner" role="status" hidden></div>
+
+          <fieldset class="form-block">
+            <legend>El centro</legend>
+            <div class="form-grid">
+              <div class="field field--full">
+                <label for="rqCenter">Nombre del centro</label>
+                <input id="rqCenter" name="center" type="text" maxlength="80" autocomplete="organization" placeholder="Hospital Universitario…" aria-describedby="rqCenter-err">
+                <p class="field-error" id="rqCenter-err"></p>
+              </div>
+              <div class="field">
+                <label for="rqKind">Tipo de centro</label>
+                <select id="rqKind" name="kind">
+                  <option value="Hospital">Hospital</option>
+                  <option value="Centro de transfusión">Centro de transfusión</option>
+                  <option value="Banco de sangre">Banco de sangre</option>
+                  <option value="Clínica">Clínica</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="rqCity">Ciudad</label>
+                <input id="rqCity" name="city" type="text" maxlength="50" autocomplete="address-level2" aria-describedby="rqCity-err">
+                <p class="field-error" id="rqCity-err"></p>
+              </div>
+              <div class="field field--full">
+                <label for="rqAddress">Dirección donde se dona</label>
+                <input id="rqAddress" name="address" type="text" maxlength="100" autocomplete="street-address" placeholder="Calle, número, planta o unidad" aria-describedby="rqAddress-err">
+                <p class="field-error" id="rqAddress-err"></p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-block">
+            <legend>Qué necesitáis</legend>
+            <div class="form-grid">
+              <div class="field field--full">
+                <span class="field-label" id="rqTypeLabel">Tipo de donación</span>
+                <div class="seg seg--wide" role="radiogroup" aria-labelledby="rqTypeLabel">
+                  <label class="seg-opt"><input type="radio" name="rqType" value="sangre" checked><span>Sangre total</span></label>
+                  <label class="seg-opt"><input type="radio" name="rqType" value="plaquetas"><span>Plaquetas</span></label>
+                  <label class="seg-opt"><input type="radio" name="rqType" value="plasma"><span>Plasma</span></label>
+                </div>
+              </div>
+
+              <div class="field field--full">
+                <span class="field-label" id="rqGroupsLabel">Grupos sanguíneos que buscáis</span>
+                <div class="group-chips group-chips--wrap" role="group" aria-labelledby="rqGroupsLabel" aria-describedby="rqGroups-err">
+                  <label class="gchip gchip--all"><input type="checkbox" name="rqGroups" value="all" checked><span>Todos los grupos</span></label>
+                  <label class="gchip"><input type="checkbox" name="rqGroups" value="O-"><span>O−</span></label>
+                  <label class="gchip"><input type="checkbox" name="rqGroups" value="O+"><span>O+</span></label>
+                  <label class="gchip"><input type="checkbox" name="rqGroups" value="A-"><span>A−</span></label>
+                  <label class="gchip"><input type="checkbox" name="rqGroups" value="A+"><span>A+</span></label>
+                  <label class="gchip"><input type="checkbox" name="rqGroups" value="B-"><span>B−</span></label>
+                  <label class="gchip"><input type="checkbox" name="rqGroups" value="B+"><span>B+</span></label>
+                  <label class="gchip"><input type="checkbox" name="rqGroups" value="AB-"><span>AB−</span></label>
+                  <label class="gchip"><input type="checkbox" name="rqGroups" value="AB+"><span>AB+</span></label>
+                </div>
+                <p class="field-error" id="rqGroups-err"></p>
+              </div>
+
+              <div class="field field--full">
+                <span class="field-label" id="rqUrgencyLabel">Urgencia</span>
+                <div class="seg seg--wide seg--urgency" role="radiogroup" aria-labelledby="rqUrgencyLabel">
+                  <label class="seg-opt"><input type="radio" name="rqUrgency" value="normal"><span>Normal</span></label>
+                  <label class="seg-opt"><input type="radio" name="rqUrgency" value="urgente" checked><span>Urgente</span></label>
+                  <label class="seg-opt"><input type="radio" name="rqUrgency" value="critica"><span>Crítica</span></label>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="rqNeeded">Donantes necesarios</label>
+                <input id="rqNeeded" name="needed" type="number" inputmode="numeric" min="1" max="500" step="1" value="20" aria-describedby="rqNeeded-err">
+                <p class="field-error" id="rqNeeded-err"></p>
+              </div>
+              <div class="field">
+                <label for="rqDeadline">Fecha límite</label>
+                <input id="rqDeadline" name="deadline" type="date" aria-describedby="rqDeadline-err">
+                <p class="field-error" id="rqDeadline-err"></p>
+              </div>
+              <div class="field">
+                <label for="rqOpen">Abrimos a las</label>
+                <input id="rqOpen" name="open" type="time" value="09:00" step="1800" aria-describedby="rqOpen-err">
+                <p class="field-error" id="rqOpen-err"></p>
+              </div>
+              <div class="field">
+                <label for="rqClose">Cerramos a las</label>
+                <input id="rqClose" name="close" type="time" value="20:00" step="1800" aria-describedby="rqClose-err">
+                <p class="field-error" id="rqClose-err"></p>
+              </div>
+              <div class="field field--full">
+                <label for="rqNote">Mensaje para los donantes <span class="opt">(opcional)</span></label>
+                <textarea id="rqNote" name="note" rows="3" maxlength="200" placeholder="Por ejemplo: acceso por la puerta de consultas externas; hay aparcamiento gratuito." aria-describedby="rqNote-count"></textarea>
+                <p class="field-hint" id="rqNote-count">0 / 200</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-block">
+            <legend>Persona de contacto</legend>
+            <div class="form-grid">
+              <div class="field field--full">
+                <label for="rqContact">Nombre y cargo</label>
+                <input id="rqContact" name="contact" type="text" maxlength="80" autocomplete="name" placeholder="Nombre, servicio de hematología" aria-describedby="rqContact-err">
+                <p class="field-error" id="rqContact-err"></p>
+              </div>
+              <div class="field">
+                <label for="rqPhone">Teléfono</label>
+                <input id="rqPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" aria-describedby="rqPhone-err">
+                <p class="field-error" id="rqPhone-err"></p>
+              </div>
+              <div class="field">
+                <label for="rqEmail">Correo electrónico</label>
+                <input id="rqEmail" name="email" type="email" autocomplete="email" aria-describedby="rqEmail-err">
+                <p class="field-error" id="rqEmail-err"></p>
+              </div>
+              <div class="field field--full">
+                <label class="check">
+                  <input type="checkbox" id="rqConfirm" name="confirm" aria-describedby="rqConfirm-err">
+                  <span>Confirmo que represento a este centro sanitario y que la información es correcta.</span>
+                </label>
+                <p class="field-error" id="rqConfirm-err"></p>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="form-actions">
+            <button class="btn btn--primary btn--lg" type="submit">Publicar solicitud</button>
+            <p class="fine-print">La solicitud se publica en el tablón de este navegador. Los datos de contacto no se muestran a los donantes.</p>
+          </div>
+        </form>
+
+        <aside class="center-aside">
+          <div class="preview-wrap">
+            <p class="preview-label"><span class="live-dot" aria-hidden="true"></span>Así la verán los donantes</p>
+            <div class="preview-card no-anim" id="rqPreview"></div>
+          </div>
+          <div class="my-requests">
+            <h3>Tus solicitudes</h3>
+            <div id="myRequests"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MIS CITAS ============ -->
+  <section class="section" id="mis-citas" aria-labelledby="citas-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Mis citas</p>
+        <h2 id="citas-title" tabindex="-1">Tus donaciones reservadas</h2>
+        <p class="section-lead">Las citas que reserves se guardan en este navegador. Lleva el código el día de la donación.</p>
+      </div>
+      <div class="appointments" id="appointments"></div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="section section--alt" id="faq" aria-labelledby="faq-title">
+    <div class="container faq-layout">
+      <div class="section-head reveal">
+        <p class="eyebrow">Preguntas frecuentes</p>
+        <h2 id="faq-title">Lo que casi todo el mundo pregunta antes de donar</h2>
+      </div>
+      <div class="faq-list reveal">
+        <details class="faq-item">
+          <summary>¿Duele?</summary>
+          <div class="faq-body"><p>Solo notarás un pinchazo breve al principio, como en un análisis de sangre. Durante la extracción no se siente dolor.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Puedo contagiarme de algo al donar?</summary>
+          <div class="faq-body"><p>No. Todo el material que se usa es estéril y de un solo uso, y se desecha después de cada donación.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Tengo que ir en ayunas?</summary>
+          <div class="faq-body"><p>No, al contrario. Come algo ligero y bebe agua antes de ir. Evita las comidas muy copiosas o grasas justo antes de donar.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Qué se hace con mi sangre?</summary>
+          <div class="faq-body"><p>Se analiza para determinar el grupo y descartar infecciones como el VIH, las hepatitis B y C o la sífilis. Después se separa en glóbulos rojos, plasma y plaquetas. Si algún análisis sale alterado, el centro te avisa de forma confidencial.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Cada cuánto puedo donar?</summary>
+          <div class="faq-body"><p>Entre dos donaciones de sangre total deben pasar al menos 2 meses. Los hombres pueden donar hasta 4 veces al año y las mujeres, hasta 3. Las plaquetas y el plasma tienen sus propios intervalos, que te indicará tu centro.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Puedo donar si tomo medicación?</summary>
+          <div class="faq-body"><p>Depende del medicamento y del motivo por el que lo tomas. Muchos tratamientos son compatibles con la donación. Coméntalo en la entrevista y el personal sanitario te dirá si puedes donar ese día.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>¿Puedo hacer deporte después?</summary>
+          <div class="faq-body"><p>Evita el ejercicio intenso durante el resto del día y bebe más líquido de lo habitual. Al día siguiente puedes hacer vida normal.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Soy de un centro sanitario. ¿Cómo publico una solicitud?</summary>
+          <div class="faq-body"><p>Rellena el formulario de la sección <a href="#centros">Para centros</a>: qué necesitáis, qué grupos, cuántos donantes y hasta cuándo. La solicitud aparece al instante en el tablón y puedes retirarla cuando quieras.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer band-dark">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="#top" aria-label="Latido, volver al inicio">
+          <svg class="brand-mark" viewBox="0 0 32 40" aria-hidden="true" focusable="false">
+            <path class="bm-drop" d="M16 2C16 2 4 16.5 4 25.5a12 12 0 0 0 24 0C28 16.5 16 2 16 2z"/>
+            <path class="bm-ecg" d="M6 26h5l2-4 3 8 2.5-6 1.5 2H26"/>
+          </svg>
+          <span class="brand-name">Latido</span>
+        </a>
+        <p>Una red que une a quien necesita sangre con quien puede darla.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Pie de página">
+        <a href="#solicitudes">Solicitudes</a>
+        <a href="#que-donar">Qué donar</a>
+        <a href="#compatibilidad">Compatibilidad</a>
+        <a href="#como-donar">Cómo donar</a>
+        <a href="#centros">Para centros</a>
+        <a href="#faq">Preguntas frecuentes</a>
+      </nav>
+      <div class="footer-emergency">
+        <p>¿Una emergencia médica?</p>
+        <p class="footer-112">Llama al 112</p>
+      </div>
+    </div>
+    <p class="footer-word reveal" aria-hidden="true">Latido</p>
+    <div class="footer-bottom">
+      <p>© <span id="year">2026</span> Latido. Prototipo con centros y solicitudes de ejemplo; los datos se guardan solo en tu navegador.</p>
+      <button class="link-btn" type="button" id="resetDemo">
+        <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-refresh"></use></svg>
+        <span>Restablecer datos de la demo</span>
+      </button>
+    </div>
+  </div>
+</footer>
+
+<!-- Reserva de cita -->
+<dialog class="modal" id="bookDialog" aria-labelledby="bookTitle">
+  <div class="modal-card">
+    <button class="icon-btn modal-close" type="button" data-close aria-label="Cerrar">
+      <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-x"></use></svg>
+    </button>
+    <div class="modal-body" id="bookBody"></div>
+  </div>
+</dialog>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+</body>
+</html>
